@@ -4,8 +4,11 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+use App\Models\User;
+
+
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\employer>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Employer>
  */
 class EmployerFactory extends Factory
 {
@@ -17,7 +20,9 @@ class EmployerFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->company()
+            'name' => fake()->name,
+            'logo' => fake()->imageUrl(),
+            'user_id' => User::factory(),
         ];
     }
 }

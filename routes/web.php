@@ -1,31 +1,50 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SessionController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\TagController;
+use App\Models\Job;
+use App\Jobs\TranslateJob;
 
-Route::view('/', 'home');
+
+// Route::view('/', 'home');
 Route::view('/contact', 'contact');
 
-Route::resource('jobs', JobController::class);
+Route::get('test', function() {
+    $job = Job::first();
+    TranslateJob::dispatch($job);
+});
+
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [RegisterController::class, 'create']);
+    Route::post('/register', [RegisterController::class, 'store']);
+    Route::get('/login', [SessionController::class, 'create']);
+    Route::post('/login', [SessionController::class, 'store'])->name('login');
+});
 
 //Auth
-Route::get('/register', [RegisterController::class, 'create']);
-Route::post('/register', [RegisterController::class, 'store']);
 
-Route::get('/login', [SessionController::class, 'create']);
-Route::post('/login', [SessionController::class, 'store']);
-Route::post('/logout', [SessionController::class, 'destroy']);
-// Route::controller(JobController::class)->group(function () {
-//     Route::get('/jobs',  'index');
-//     Route::get('/jobs/create',  'create');
-//     Route::get('/jobs/{job}',  'show');
-//     Route::post('/jobs',  'store');
-//     Route::get('/jobs/{job}/edit',  'edit');
-//     Route::patch('/jobs/{job}', 'update');
-//     Route::delete('/jobs/{job}',  'destroy');
-// });
+Route::delete('/logout', [SessionController::class, 'destroy'])->middleware('auth');
+
+
+
+Route::controller(JobController::class)->group(function () {
+    Route::get('/', 'index');
+    Route::get('/jobs/create', 'create')->middleware('auth');
+    Route::get('/jobs/{job}', 'show');
+    Route::post('/jobs', 'store')->middleware('auth');
+    Route::get('/jobs/{job}/edit', 'edit')->middleware('auth')->can('edit', 'job');
+    Route::patch('/jobs/{job}', 'update')->middleware('auth')->can('edit', 'job');
+    Route::delete('/jobs/{job}', 'destroy')->middleware('auth')->can('edit', 'job');
+});
+
+
+Route::get('/tags/{tag:name}', TagController::class);
+Route::get('/search', SearchController::class);
 
 
 

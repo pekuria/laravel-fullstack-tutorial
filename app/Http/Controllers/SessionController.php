@@ -12,9 +12,9 @@ class SessionController extends Controller
     {
         return view('auth.login');
     }
-    public function store()
+    public function store(Request $request)
     {
-       $validatedAttributes = request()->validate([
+       $validatedAttributes = $request->validate([
         'email' => ['required', 'email'],
         'password' => ['required']
        ]);
@@ -25,9 +25,9 @@ class SessionController extends Controller
         ]);
        }
 
-       request()->session()->regenerate();
+       $request->session()->regenerate();
 
-       return redirect(('/jobs'));
+       return redirect(('/'));
 
     }
 

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Employer;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\job>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Job>
  */
 class JobFactory extends Factory
 {
@@ -18,9 +18,13 @@ class JobFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => fake()->jobTitle(),
             'employer_id' => Employer::factory(),
-            'salary' => fake()->randomDigit() * 10000
+            'title' => fake()->jobTitle,
+            'salary' => fake()->randomElement(['£30,000', '£50,000', '£75,000', '£100,000']),
+            'location' => fake()->randomElement(['Remote', 'Hybrid', 'Onsite']),
+            'job_type' =>  fake()->randomElement(['Full Time', 'Part Time', 'Contract']),
+            'url' => fake()->url,
+            'featured' =>fake()->boolean()
         ];
     }
 }

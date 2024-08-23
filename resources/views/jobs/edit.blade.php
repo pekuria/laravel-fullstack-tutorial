@@ -1,7 +1,7 @@
-<x-layout>
-    <x-slot:heading>
+<x:layout>
+    <x:slot:heading>
         Eidt Job {{ $job->title }}
-    </x-slot:heading>
+    </x:slot:heading>
     <form method="POST" action="/jobs/{{ $job->id }}">
         @csrf
         @method('PATCH')
@@ -71,4 +71,4 @@
         @method('DELETE')
     </form>
 
-</x-layout>
+</x:layout>
